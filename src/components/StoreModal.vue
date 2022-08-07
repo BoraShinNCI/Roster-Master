@@ -1,8 +1,16 @@
 <template>
-  <div class="black-bg" v-if="selectStoreWindow == true && $store.state.storeInfo !=null">
+  <div class="black-bg" v-if="selectStoreWindow == true">
     <div class="white-bg w-75 m-auto">
-      <div>
-        <h3>SELECT STORE</h3>
+      <div v-if="$store.state.storeInfo.length == 0">
+        <p>
+          You are not registered in any store. <br />Please create a store or
+          ask your manager to add you to the store.
+        </p>
+        <router-link class="btn btn-dark" to="/newStore">
+          Create Store</router-link
+        ><button class="btn btn-secondary mx-2" @click="$emit('closeModal')">Close</button>
+      </div>
+      <div v-if="$store.state.storeInfo.length > 0">
         <div>
           <div class="card" v-for="storeInfo in storeInfoList" :key="storeInfo">
             <h5 class="card-header">{{ storeInfo.name }}</h5>
@@ -17,32 +25,18 @@
                 }}
               </p>
 
-
               <a
                 href="#"
                 class="btn btn-dark"
                 @click="selectStore(storeInfo), $emit('closeModal')"
                 >Select</a
-              >
+              ><button class="btn btn-secondary mx-2" @click="$emit('closeModal')">Close</button>
             </div>
           </div>
         </div>
-
-        
-              <div
-                v-if="
-                  $store.state.storeInfo.length == 0 "
-              >
-                <p>You have no store registered</p>
-                 <a
-                href="#"
-                class="btn btn-primary"
-                @click="$emit('closeModal')"
-                >Close</a
-              >
-              </div>
-
       </div>
+
+      
     </div>
   </div>
 </template>
