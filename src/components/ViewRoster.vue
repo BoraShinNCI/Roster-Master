@@ -1,8 +1,11 @@
 <template>
-  <h3>Weekly Roster</h3>
+  <h3 class="my-5">Weekly Roster</h3>
 
   <!-- select week to view roster -->
+  <div class="w-50 m-auto mb-3">
   <Datepicker v-model="date" weekPicker autoApply @update:model-value="callSched" />
+  </div>
+
   <!-- roster table -->
   <TableView
     v-if="scheduleFetched == true"
@@ -21,7 +24,7 @@
 <script>
 import { ref } from "vue";
 import Datepicker from "@vuepic/vue-datepicker";
-import TableView from "../components/Table.vue";
+import TableView from "./RosterTable.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { db } from "../firebase/db";
 import { collection, getDocs, doc } from "firebase/firestore";

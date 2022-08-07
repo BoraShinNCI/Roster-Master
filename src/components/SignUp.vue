@@ -24,7 +24,7 @@
       />
     </div>
 
-    <button type="submit" class="btn btn-primary mt-3" @click="signup">
+    <button type="submit" class="btn btn-dark mt-3" @click="signup">
       Sign Up
     </button>
   </form>

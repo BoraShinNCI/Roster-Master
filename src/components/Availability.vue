@@ -1,7 +1,8 @@
 <template>
+<div class="container-fluid my-5">
   <h3>Enter your availability</h3>
 
-  <table class="table table-striped mx-auto w-75">
+  <table class="table table-striped mt-5 mx-auto w-75">
     <thead>
       <th>Week</th>
       <th>Available</th>
@@ -181,7 +182,8 @@
       </tr>
     </tbody>
   </table>
-  <button class="btn btn-primary" @click="updateAvailability">Save</button>
+  <button class="btn btn-dark" @click="updateAvailability">Save</button>
+  </div>
 </template>
 
 <script>
@@ -189,9 +191,10 @@ import { db } from "../firebase/db";
 import { updateDoc, arrayUnion, doc } from "firebase/firestore";
 import { ref } from "vue";
 import Datepicker from "@vuepic/vue-datepicker";
+
 import "@vuepic/vue-datepicker/dist/main.css";
 export default {
-  name: "availability-view",
+  name: "availability-edit",
   setup() {
     const mondayFrom = ref();
     const mondayTo = ref();
@@ -227,11 +230,6 @@ export default {
   },
   data() {
     return {
-      // monday: {
-      //   available: ref(""),
-      //   from: ref(""),
-      //   to: ref("")
-      // },
       availableDays: [],
     };
   },

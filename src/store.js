@@ -43,7 +43,7 @@ const store = createStore({
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
-          availability: user.availability
+          availability: user.availability,
         };
         console.log("user setting..." + state.user.email);
       }
@@ -58,11 +58,9 @@ const store = createStore({
     // setting user type
     isManager(state, manager) {
       state.isManager = manager;
-
     },
 
     updateEmployeePool(state, storeID) {
-
       if (storeID) {
         state.employeePool = new Array();
         // reading employee list
@@ -81,19 +79,20 @@ const store = createStore({
               phone: doc.data().phone,
               email: doc.data().email,
               type: doc.data().type,
-              availability: doc.data().availability
+              availability: doc.data().availability,
             };
 
             state.employeePool.push(user);
           });
         });
-        console.log("updating employee pool successfully "+ state.employeePool);
+        console.log(
+          "updating employee pool successfully " + state.employeePool
+        );
       }
     },
 
     // setting store ID email
     setStoreInfo(state, id) {
-
       state.storeInfo = new Array();
       try {
         // reading business info of each store
@@ -114,26 +113,19 @@ const store = createStore({
       } catch (e) {
         console.error("error setting store list info (setStoreInfo)", e);
       }
-
-      
     },
 
     // selecting store
     selectStore(state, selectedStoreInfo) {
-
-      if(selectedStoreInfo){
-
+      if (selectedStoreInfo) {
         state.selectedStore = selectedStoreInfo;
         state.isStoreSelected = true;
-        console.log("selected? " + state.isStoreSelected)
-        
-        if (state.isManager == true) {
-          // adding employees under the manager's employee pool
-          store.commit("updateEmployeePool", store.state.selectedStore.storeID);
-        }
-      }else{
+        console.log("selected? " + state.isStoreSelected);
+
+        store.commit("updateEmployeePool", store.state.selectedStore.storeID);
+      } else {
         state.isStoreSelected = false;
-        console.log("selected? " + state.isStoreSelected)
+        console.log("selected? " + state.isStoreSelected);
       }
     },
   },
@@ -153,15 +145,15 @@ const store = createStore({
           router.push("/account");
         })
         .catch((error) => {
-          if(error.code == "auth/invalid-email"){
-            alert("Please enter a valid email address.")
-          }else if(error.code == "auth/weak-password"){
-            alert("Password has to be at least six characters")
-          }else if(error.code == "auth/email-already-in-use"){
-            alert("Existing user: Please log in.")
+          if (error.code == "auth/invalid-email") {
+            alert("Please enter a valid email address.");
+          } else if (error.code == "auth/weak-password") {
+            alert("Password has to be at least six characters");
+          } else if (error.code == "auth/email-already-in-use") {
+            alert("Existing user: Please log in.");
             router.push("/login");
           }
-          console.log(error.code)
+          console.log(error.code);
         });
     },
 
@@ -171,20 +163,17 @@ const store = createStore({
         .then((response) => {
           //setting app user to currently logged in user
           context.commit("setUser", auth.currentUser);
-
-          console.log("Now logged in: " + store.state.user);
-
+          alert("Welcome!");
         })
         .catch((error) => {
-          if(error.code == "auth/user-not-found"){
-            alert("User doesn't exist. Please sign up.")
-          }else if(error.code == "auth/invalid-email"){
-            alert("Please enter a valid email address.")
-          }else if(error.code == "auth/wrong-password"){
-            alert("Wrong password!")
+          if (error.code == "auth/user-not-found") {
+            alert("User doesn't exist. Please sign up.");
+          } else if (error.code == "auth/invalid-email") {
+            alert("Please enter a valid email address.");
+          } else if (error.code == "auth/wrong-password") {
+            alert("Wrong password!");
           }
-          console.log(error.code)
-  
+          console.log(error.code);
         });
     },
 
@@ -268,8 +257,8 @@ const store = createStore({
 
       alert("new store successfully added");
 
-        //direct to employee adding page
-        router.push("/list");
+      //direct to employee adding page
+      router.push("/list");
     },
 
     // adding employee to the employee pool in the store database
@@ -348,6 +337,49 @@ const store = createStore({
       //direct to login page
       router.push("/roster");
     },
+
+    postRequest(context, requestInfo) {
+      try {
+        addDoc(
+          collection(
+            db,
+            "stores/" + store.state.selectedStore.storeID + "/requests"
+          ),
+          {
+            timestamp: requestInfo.timestamp,
+            email: requestInfo.email,
+            requestedBy: requestInfo.requestedBy,
+            requestedDate: requestInfo.requestedDate,
+            requestType: requestInfo.requestType,
+            requestMessage: requestInfo.requestMessage,
+            requestStatus: requestInfo.requestStatus,
+            approvalMessage: requestInfo.approvalMessage,
+          }
+        );
+      } catch (e) {
+        console.error("Error adding doc: ", e);
+      }
+      alert("request submitted");
+    },
+    updateRequest(context, approval) {
+      try {
+        updateDoc(
+          doc(
+            db,
+            "stores/" + store.state.selectedStore.storeID + "/requests",
+            approval.id
+          ),
+          {
+            timestamp: approval.timestamp,
+            approvalMessage: approval.approvalMessage,
+            requestStatus: approval.requestStatus,
+          }
+        );
+        alert("Request is " + approval.requestStatus);
+      } catch (e) {
+        console.error("Error", e);
+      }
+    },
   },
 });
 
@@ -368,24 +400,22 @@ onAuthStateChanged(auth, (user) => {
         email: doc.data().email,
         phone: doc.data().phone,
         type: doc.data().type,
-        availability: doc.data().availability
+        availability: doc.data().availability,
       };
 
       // user info setting
       store.commit("setUser", user);
-      
-      if(doc.data().storeID.length != 0){
+
+      if (doc.data().storeID.length != 0) {
         // reading all the store IDs that the user is registered to
         store.commit("setStoreInfo", doc.data().storeID);
       }
-      
-      
+
       // if the user is a manager
       if (doc.data().type == "manager") {
         // setting user type: manager
         store.commit("isManager", true);
       }
-
     });
 
     //direct to home page

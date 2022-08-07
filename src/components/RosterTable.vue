@@ -1,17 +1,19 @@
 <template>
   <div>
-    <table class="table">
+    <table class="table table-bordered">
       <thead>
         <tr>
           <th v-for="days in week" :key="days">
-            {{ days.schedWeek }}
-          </th>
-        </tr>
-        <tr>
-          <th v-for="days in week" :key="days" :value="days.date">
-            {{ days.date.getDate() }}/{{ days.date.getMonth() + 1 }}/{{
-              days.date.getFullYear()
-            }}
+
+            <p >
+              {{ days.schedWeek }}
+            </p>
+        
+            <p :value="days.date">
+              {{ days.date.getDate() }}/{{ days.date.getMonth() + 1 }}/{{
+                days.date.getFullYear()
+              }}
+            </p>
           </th>
         </tr>
       </thead>
@@ -19,44 +21,44 @@
         <tr v-for="(employee, i) in employeePool" :key="i">
           <td v-if="Mon[i] != null">
             <div>{{ Mon[i].timeStart }} - {{ Mon[i].timeFinish }}</div>
-            {{ Mon[i].firstName }},
-            {{ Mon[i].lastName.substring(0, 1).toUpperCase() }}
+            {{ Mon[i].lastName.substring(0, 1).toUpperCase() }}, 
+            {{ Mon[i].firstName }}
           </td>
           <td v-if="Mon[i] == null"></td>
           <td v-if="Tue[i] != null">
             <div>{{ Tue[i].timeStart }} - {{ Tue[i].timeFinish }}</div>
-            {{ Tue[i].firstName }},
-            {{ Tue[i].lastName.substring(0, 1).toUpperCase() }}
+            {{ Tue[i].lastName.substring(0, 1).toUpperCase() }}, 
+            {{ Tue[i].firstName }}
           </td>
           <td v-if="Tue[i] == null"></td>
           <td v-if="Wed[i] != null">
             <div>{{ Wed[i].timeStart }} - {{ Wed[i].timeFinish }}</div>
-            {{ Wed[i].firstName }},
-            {{ Wed[i].lastName.substring(0, 1).toUpperCase() }}
+            {{ Wed[i].lastName.substring(0, 1).toUpperCase() }}, 
+            {{ Wed[i].firstName }}
           </td>
           <td v-if="Wed[i] == null"></td>
           <td v-if="Thu[i] != null">
             <div>{{ Thu[i].timeStart }} - {{ Thu[i].timeFinish }}</div>
-            {{ Thu[i].firstName }},
-            {{ Thu[i].lastName.substring(0, 1).toUpperCase() }}
+            {{ Thu[i].lastName.substring(0, 1).toUpperCase() }}, 
+            {{ Thu[i].firstName }}
           </td>
           <td v-if="Thu[i] == null"></td>
           <td v-if="Fri[i] != null">
             <div>{{ Fri[i].timeStart }} - {{ Fri[i].timeFinish }}</div>
-            {{ Fri[i].firstName }},
-            {{ Fri[i].lastName.substring(0, 1).toUpperCase() }}
+            {{ Fri[i].lastName.substring(0, 1).toUpperCase() }}, 
+            {{ Fri[i].firstName }}
           </td>
           <td v-if="Fri[i] == null"></td>
           <td v-if="Sat[i] != null">
             <div>{{ Sat[i].timeStart }} - {{ Sat[i].timeFinish }}</div>
-            {{ Sat[i].firstName }},
-            {{ Sat[i].lastName.substring(0, 1).toUpperCase() }}
+            {{ Sat[i].lastName.substring(0, 1).toUpperCase() }}, 
+            {{ Sat[i].firstName }}
           </td>
           <td v-if="Sat[i] == null"></td>
           <td v-if="Sun[i] != null">
             <div>{{ Sun[i].timeStart }} - {{ Sun[i].timeFinish }}</div>
-            {{ Sun[i].firstName }},
-            {{ Sun[i].lastName.substring(0, 1).toUpperCase() }}
+            {{ Sun[i].lastName.substring(0, 1).toUpperCase() }}, 
+            {{ Sun[i].firstName }}
           </td>
           <td v-if="Sun[i] == null"></td>
         </tr>

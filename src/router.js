@@ -7,13 +7,14 @@ import ListEmployee from "./components/ListEmployee.vue";
 import NewStore from "./components/NewStore.vue";
 import ViewRoster from "./components/ViewRoster.vue";
 import CreateRoster from "./components/CreateRoster.vue";
-import Availability from "./components/Availability.vue";
-import Request from "./components/Request.vue"
+import editAvailability from "./components/Availability.vue";
+import Availability from "./components/AvailabilityView.vue";
+import RequestView from "./components/Request.vue";
+import RequestApproval from "./components/ApproveRequest.vue";
 
 import store from "./store.js";
 
 const routes = [
-
   {
     path: "/",
     component: Home,
@@ -44,17 +45,28 @@ const routes = [
     component: ViewRoster,
     meta: { isLoggedin: true },
   },
+
   {
     path: "/available",
     component: Availability,
     meta: { isLoggedin: true },
   },
   {
+    path: "/editAvailability",
+    component: editAvailability,
+    meta: { isLoggedin: true },
+  },
+  {
     path: "/request",
-    component: Request,
+    component: RequestView,
     meta: { isLoggedin: true },
   },
 
+  {
+    path: "/approve",
+    component: RequestApproval,
+    meta: { isLoggedin: true, isManager: true },
+  },
   {
     path: "/list",
     component: ListEmployee,
@@ -73,14 +85,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-
   if (to.matched.some((record) => record.meta.isLoggedin)) {
     if (to.meta.isLoggedin && !store.state.isLoggedin) {
       next({
         name: "login",
       });
     } else if (to.meta.isManager && !store.state.isManager) {
-      alert("Unauthorized access!!!");
+      alert("Unauthorized Access");
     } else {
       next();
     }

@@ -1,29 +1,149 @@
 <template>
-  <NavBar @openModal="selectStoreWindow = true" class="mb-5"/>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <router-link to="/" class="navbar-brand" aria-current="page">
+        Roster Master
+      </router-link>
+
+      <div class="d-flex justify-content-end">
+        <p class="m-auto me-4 text-white" @click="selectStoreWindow = true">
+          <span v-if="$store.state.isStoreSelected == false">select store</span>
+          <span v-if="$store.state.isStoreSelected == true"
+            >{{ $store.state.selectedStore.name }} ({{
+              $store.state.selectedStore.address
+            }})</span
+          >
+        </p>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <router-link
+              to="/"
+              class="nav-link active"
+              aria-current="page"
+              href="#"
+              >Home</router-link
+            >
+          </li>
+          <li class="nav-item">
+            <router-link to="/roster" class="nav-link" href="#"
+              >Rosters</router-link
+            >
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Store Management
+            </a>
+            <ul
+              class="dropdown-menu w-50 m-auto"
+              aria-labelledby="navbarDropdownMenuLink"
+            >
+              <li>
+                <router-link to="/newStore" class="dropdown-item" href="#"
+                  >New Store</router-link
+                >
+              </li>
+              <li>
+                <router-link to="/list" class="dropdown-item"
+                  >Employees List</router-link
+                >
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              My Schedule
+            </a>
+            <ul
+              class="dropdown-menu w-50 m-auto"
+              aria-labelledby="navbarDropdownMenuLink"
+            >
+              <li>
+                <router-link to="/available" class="dropdown-item"
+                  >Availability</router-link
+                >
+              </li>
+              <li>
+                <router-link to="/request" class="dropdown-item"
+                  >Request</router-link
+                >
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown" v-if="$store.state.isManager == true">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Roster Management
+            </a>
+            <ul
+              class="dropdown-menu w-50 m-auto"
+              aria-labelledby="navbarDropdownMenuLink"
+            >
+              <li>
+                <router-link to="/create" class="dropdown-item"
+                  >Create Roster</router-link
+                >
+              </li>
+              <li>
+                <router-link to="/approve" class="dropdown-item"
+                  >Request Approval</router-link
+                >
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" @click="$store.dispatch('logout')">Sign Out</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
   <StoreModal
     @closeModal="selectStoreWindow = false"
     :selectStoreWindow="selectStoreWindow"
     :storeInfo="storeInfo"
   />
-  <router-view v-if="selectStoreWindow==false" @openModal="selectStoreWindow = true"/>
-
-  <!-- <div>
-    <b-button v-b-toggle.sidebar-variant>Toggle Sidebar</b-button>
-    <b-sidebar id="sidebar-variant" title="Sidebar" bg-variant="dark" text-variant="light" shadow>
-      <div class="px-3 py-2">
-        <p>
-          Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-          in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-        </p>
-        <b-img src="https://picsum.photos/500/500/?image=54" fluid thumbnail></b-img>
-      </div>
-    </b-sidebar>
-  </div> -->
+  <router-view
+    v-if="selectStoreWindow == false"
+    @openModal="selectStoreWindow = true"
+  />
 
 </template>
 
 <script>
-import NavBar from "./components/NavBar.vue";
 import { computed } from "vue";
 import StoreModal from "./components/StoreModal.vue";
 export default {
@@ -38,7 +158,6 @@ export default {
     };
   },
   components: {
-    NavBar: NavBar,
     StoreModal: StoreModal,
   },
   method: {},
@@ -66,9 +185,5 @@ export default {
   background: white;
   border-radius: 8px;
   padding: 20px;
-}
-
-.btn .btn-primary {
-color: green;
 }
 </style>

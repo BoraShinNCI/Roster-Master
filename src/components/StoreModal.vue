@@ -1,6 +1,6 @@
 <template>
   <div class="black-bg" v-if="selectStoreWindow == true && $store.state.storeInfo !=null">
-    <div class="white-bg w-50 m-auto">
+    <div class="white-bg w-75 m-auto">
       <div>
         <h3>SELECT STORE</h3>
         <div>
@@ -20,7 +20,7 @@
 
               <a
                 href="#"
-                class="btn btn-primary"
+                class="btn btn-dark"
                 @click="selectStore(storeInfo), $emit('closeModal')"
                 >Select</a
               >
@@ -49,7 +49,6 @@
 
 <script>
 import { computed } from "vue";
-import router from "../router";
 export default {
   name: "StoreModal",
   data() {

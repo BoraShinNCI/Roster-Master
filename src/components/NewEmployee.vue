@@ -109,7 +109,7 @@
 
                   <div class="mt-4 pt-2">
                     <input
-                      class="btn btn-primary"
+                      class="btn btn-dark"
                       type="submit"
                       value="Submit"
                       @click="submit"

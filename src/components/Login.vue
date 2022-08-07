@@ -13,12 +13,9 @@
         v-model="email"
         placeholder="Enter email"
       />
-      <small id="emailHelp" class="form-text text-muted"
-        >We'll never share your email with anyone else.</small
-      >
     </div>
     <div class="form-group col-9 mx-auto">
-
+      
       <input
         type="password"
         class="form-control"
@@ -26,9 +23,12 @@
         v-model="password"
         placeholder="Password"
       />
+      <small v-if="password.length < 6 && password.length>0" id="emailHelp" class="form-text text-danger"
+        >Password length is too short</small
+      >
     </div>
 
-    <button type="submit" class="btn btn-primary mt-3" @click="login">
+    <button class="btn btn-dark mt-3" @click="login">
       Login
     </button>
 
@@ -38,7 +38,7 @@
 <h4>
   Don't have an account?
 </h4>
-    <button class="btn btn-primary mt-3"  @click="$router.push('/signup')">
+    <button class="btn btn-dark mt-3"  @click="$router.push('/signup')">
       Sign Up
     </button>
   </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="new-store">
-    <h1 class="text-center mt-5">New Store</h1>
+    <h1 class="text-center my-5">New Store</h1>
     <section class="vh-100 gradient-custom">
       <div class="container py-4 h-100">
         <div class="row justify-content-center align-items-center h-100">
@@ -77,7 +77,7 @@
 
                   <div class="mt-4 pt-2">
                     <input
-                      class="btn btn-primary"
+                      class="btn btn-dark"
                       type="submit"
                       value="Submit"
                       @click="submit"

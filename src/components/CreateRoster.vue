@@ -1,104 +1,138 @@
 <template>
-  <h3 class="py-3">Plan New Roster</h3>
-
-  <!-- selecting employee -->
-  <div>
-    <select v-model="employeeInShift" class="select form-control-lg">
-      <option value="" selected disabled>Select Employee</option>
-      <option
-        v-for="(employee, i) in employeePool"
-        :key="i"
-        :value="{
-          email: employee.email,
-          firstName: employee.firstName,
-          lastName: employee.lastName,
-        }"
-      >
-        <p>{{ employee.firstName }} {{ employee.lastName }}</p>
-      </option>
-    </select>
-  </div>
-  <div v-if="this.employeeInShift" class="mt-3">
-  <h5>Available Schedule</h5>
-    <div v-for="(sched, i) in employeePool" :key="i">
-          
-      <table
-        v-if="this.employeeInShift.email == sched.email"
-        class="table table-striped w-50 mx-auto"
-      >
-        <thead>
-          <tr>
-            <th>Day</th>
-            <th>From</th>
-            <th>To</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr v-for="(week, i) in sched.availability" :key="i">
-            <td>
-              {{ week.week }}
-            </td>
-            <td>{{ week.fromHours.hours }}:{{ week.fromHours.minutes }}</td>
-            <td>{{ week.toHours.hours }}:{{ week.toHours.minutes }}</td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="container-fluid mt-5">
+    <!-- select week to create roster -->
+    <div class="w-50 m-auto">
+      <Datepicker
+        v-model="date"
+        weekPicker
+        autoApply
+        @update:model-value="testing"
+        :minDate="new Date()"
+      />
     </div>
-  </div>
-  <!-- set schedule for the selected employee -->
-  <div class="w-75 p-3 mx-auto col-md-6 row">
-    <p>Date</p>
-    <Datepicker
-      v-model="date"
-      :format="dateFormat"
-      :enableTimePicker="false"
-      autoApply
-      :minDate="new Date()"
-    />
-  </div>
-  <div class="w-75 p-3 mx-auto row">
-    <div class="col-md-6">
-      <p>Start</p>
-      <Datepicker v-model="timeStart" timePicker />
-    </div>
-    <div class="col-md-6">
-      <p>Finish</p>
-      <Datepicker v-model="timeFinish" timePicker />
-    </div>
-  </div>
-  <button class="btn btn-primary m-1" @click="addShift">Add Shift</button>
-
-  <!-- summary of added shift (only appears when there's a shift added) -->
-  <div v-if="employeeInShiftList.length > 0">
-    <table class="table">
+    <table
+      class="table table-bordered table-hover"
+      v-if="this.openCalendar == true"
+    >
       <thead>
         <tr>
-          <th>#</th>
-          <th>Employee</th>
-          <th>Date</th>
-          <th>Starting</th>
-          <th>Finishing</th>
+          <th>
+            <p>Employees</p>
+          </th>
+          <th v-for="days in calendarDays" :key="days">
+            <p>
+              {{ days.weekday }}
+            </p>
+
+            <p :value="days.weekdate">
+              {{ days.weekdate.getDate() }}/{{ days.weekdate.getMonth() + 1 }}
+            </p>
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(shift, i) in employeeInShiftList" :key="i">
-          <td>{{ i }}</td>
-          <td>{{ shift.firstName }}, {{shift.lastName.substring(0,1)}}</td>
-          <td>{{ shift.date }}-{{ shift.month }}-{{ shift.year }}</td>
-          <td>{{ shift.timeStart.hours }}:{{ shift.timeStart.minutes }}</td>
-          <td>{{ shift.timeFinish.hours }}:{{ shift.timeFinish.minutes }}</td>
+        <tr v-for="(employeeInfo, i) in employeePool" :key="i">
+          <td>
+            {{ employeeInfo.lastName.substring(0, 1) }},
+            {{ employeeInfo.firstName }}
+          </td>
+          <td v-for="(days, i) in calendarDays" :key="i">
+
+              <span v-for="(shift, i) in employeeInShiftList" :key="i">
+                <p
+                  v-if="
+                    shift.email == employeeInfo.email &&
+                    shift.rawDate == days.weekdate
+                  "
+                >
+                  {{ shift.timeStart.hours }}:{{ shift.timeStart.minutes }} -
+                  {{ shift.timeFinish.hours }}:{{ shift.timeFinish.minutes }}
+                </p>
+              </span>
+
+            <button
+              :id="`${employeeInfo.email}${days}`"
+              class="btn btn-dark btn-sm"
+              type="button"
+              data-bs-toggle="modal"
+              :data-bs-target="`#${employeeInfo.firstName}${employeeInfo.lastName}${i}`"
+            >
+              add
+            </button>
+
+            <!-- Modal -->
+            <div
+              class="modal fade"
+              :id="`${employeeInfo.firstName}${employeeInfo.lastName}${i}`"
+              tabindex="-1"
+              aria-labelledby="newShiftLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="newShiftLabel">
+                      {{ employeeInfo.firstName }}
+                      {{ employeeInfo.lastName }} ({{
+                        days.weekdate.getDate()
+                      }}/{{ days.weekdate.getMonth() + 1 }})
+                    </h5>
+
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <!-- selecting shift -->
+                    <div class="form-group m-auto w-75">
+                      <div class="p-3 mx-auto row">
+                        <div class="col-md-6">
+                          <p>Start</p>
+                          <Datepicker v-model="timeStart" timePicker />
+                        </div>
+                        <div class="col-md-6">
+                          <p>Finish</p>
+                          <Datepicker v-model="timeFinish" timePicker />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-dark"
+                      data-bs-dismiss="modal"
+                      @click="addShift(employeeInfo, days.weekdate)"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
-    <button class="btn btn-primary m-1" @click="postRoster">Post Roster</button>
+    <button class="btn btn-dark mt-3" @click="postRoster">Post</button>
   </div>
-  <!-- send shift to database -->
+
 </template>
 
 <script>
 import { ref, computed } from "vue";
 import Datepicker from "@vuepic/vue-datepicker";
+// import AvailabilityModal from "../components/AvailabilityModal.vue";
 import "@vuepic/vue-datepicker/dist/main.css";
 export default {
   setup() {
@@ -107,6 +141,19 @@ export default {
     const timeStart = ref();
 
     const timeFinish = ref();
+
+    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const weekDate = (date) => {
+      const weekSched = [];
+
+      for (let i = 0; i < 7; i++) {
+        const day = new Date(date[0].getTime() + 1000 * 60 * 60 * 24 * i);
+
+        weekSched.push({ weekday: days[i], weekdate: day });
+      }
+
+      return weekSched;
+    };
 
     // In case of a range picker, you'll receive [Date, Date]
     const dateFormat = (date) => {
@@ -118,8 +165,10 @@ export default {
     };
 
     return {
+      days,
       date,
       dateFormat,
+      weekDate,
       timeStart,
       timeFinish,
     };
@@ -129,29 +178,47 @@ export default {
       employeePool: computed(() => this.$store.state.employeePool),
       employeeInShiftList: [],
       employeeInShift: ref(""),
+      calendarDays: computed(() => this.weekDate(this.date)),
+      Mon: [],
+      Tue: [],
+      Wed: [],
+      Thu: [],
+      Fri: [],
+      Sat: [],
+      Sun: [],
+      openCalendar: false,
     };
   },
   components: {
     Datepicker,
+    // AvailabilityModal,
   },
   methods: {
-    addShift() {
+    testing() {
+      this.openCalendar = true;
+    },
+    addShift(employeeInfo, selectedDate) {
       const shift = {
-        email: this.employeeInShift.email,
-        firstName: this.employeeInShift.firstName,
-        lastName: this.employeeInShift.lastName,
-        year: this.date.getFullYear(),
-        month: this.date.getMonth() + 1,
-        date: this.date.getDate(),
+        email: employeeInfo.email,
+        firstName: employeeInfo.firstName,
+        lastName: employeeInfo.lastName,
+        year: selectedDate.getFullYear(),
+        month: selectedDate.getMonth() + 1,
+        date: selectedDate.getDate(),
+        rawDate: selectedDate,
         timeStart: this.timeStart,
         timeFinish: this.timeFinish,
       };
 
-      console.log(shift.lastName);
       this.employeeInShiftList.push(shift);
     },
     postRoster() {
-      this.$store.dispatch("postRoster", this.employeeInShiftList);
+// console.log(this.employeeInShiftList.length)
+      if(this.employeeInShiftList.length == 0){
+        alert("Please create roster first")
+      }else{
+        this.$store.dispatch("postRoster", this.employeeInShiftList);
+      }
     },
   },
 };
