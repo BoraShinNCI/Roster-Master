@@ -385,50 +385,54 @@ const store = createStore({
 
 // checing authentication state
 onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // login status setting
-    store.commit("setLogin", true);
-    console.log("auth state changed: User signed in");
+  try {
+    if (user) {
+      // login status setting
+      store.commit("setLogin", true);
+      console.log("auth state changed: User signed in");
 
-    //reading the user type
-    const docRef = doc(db, "employees", auth.currentUser.email);
-    getDoc(docRef).then((doc) => {
-      const user = {
-        employeeID: doc.data().employeeID,
-        firstName: doc.data().firstName,
-        lastName: doc.data().lastName,
-        email: doc.data().email,
-        phone: doc.data().phone,
-        type: doc.data().type,
-        availability: doc.data().availability,
-      };
+      //reading the user type
+      const docRef = doc(db, "employees", auth.currentUser.email);
+      getDoc(docRef).then((doc) => {
+        const user = {
+          employeeID: doc.data().employeeID,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          email: doc.data().email,
+          phone: doc.data().phone,
+          type: doc.data().type,
+          availability: doc.data().availability,
+        };
 
-      // user info setting
-      store.commit("setUser", user);
+        // user info setting
+        store.commit("setUser", user);
 
-      if (doc.data().storeID.length != 0) {
-        // reading all the store IDs that the user is registered to
-        store.commit("setStoreInfo", doc.data().storeID);
-      }
+        if (doc.data().storeID.length != 0) {
+          // reading all the store IDs that the user is registered to
+          store.commit("setStoreInfo", doc.data().storeID);
+        }
 
-      // if the user is a manager
-      if (doc.data().type == "manager") {
-        // setting user type: manager
-        store.commit("isManager", true);
-      }
-    });
+        // if the user is a manager
+        if (doc.data().type == "manager") {
+          // setting user type: manager
+          store.commit("isManager", true);
+        }
+      });
 
-    //direct to home page
-    router.push("/");
-  } else {
-    console.log("auth state changed: No user is signed in");
-    store.commit("setLogin", false);
-    store.commit("isManager", false);
-    store.commit("setStoreInfo", []);
-    store.commit("selectStore");
+      //direct to home page
+      router.push("/");
+    } else {
+      console.log("auth state changed: No user is signed in");
+      store.commit("setLogin", false);
+      store.commit("isManager", false);
+      store.commit("setStoreInfo", []);
+      store.commit("selectStore");
 
-    //direct to login page
-    router.push("/login");
+      //direct to login page
+      router.push("/login");
+    }
+  } catch (e) {
+    console.log(e);
   }
 });
 
