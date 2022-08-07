@@ -63,7 +63,7 @@
                 >
               </li>
               <li>
-                <router-link to="/list" class="dropdown-item"
+                <router-link to="/list" class="dropdown-item" v-if="$store.state.isManager == true"
                   >Employees List</router-link
                 >
               </li>
