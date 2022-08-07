@@ -11,7 +11,7 @@
       />
     </div>
     <table
-      class="table table-bordered table-hover"
+      class="table table-bordered table-hover mt-2"
       v-if="this.openCalendar == true"
     >
       <thead>
