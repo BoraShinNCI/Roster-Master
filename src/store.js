@@ -45,14 +45,14 @@ const store = createStore({
           email: user.email,
           availability: user.availability,
         };
-        console.log("user setting..." + state.user.email);
+
       }
     },
 
     // setting login status
     setLogin(state, loggedin) {
       state.isLoggedin = loggedin;
-      console.log("User login status " + state.isLoggedin);
+
     },
 
     // setting user type
