@@ -63,7 +63,10 @@
                 >
               </li>
               <li>
-                <router-link to="/list" class="dropdown-item" v-if="$store.state.isManager == true"
+                <router-link
+                  to="/list"
+                  class="dropdown-item"
+                  v-if="$store.state.isManager == true"
                   >Employees List</router-link
                 >
               </li>
@@ -124,7 +127,10 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" @click="$store.dispatch('logout')">Sign Out</a>
+            <a v-if="$store.state.isLoggedin == true" class="nav-link" @click="$store.dispatch('logout')">Sign Out</a>
+            <router-link to="/login" v-if="$store.state.isLoggedin == false" class="nav-link"
+              >Log In</router-link
+            >
           </li>
         </ul>
       </div>
@@ -140,7 +146,6 @@
     v-if="selectStoreWindow == false"
     @openModal="selectStoreWindow = true"
   />
-
 </template>
 
 <script>
