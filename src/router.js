@@ -18,7 +18,7 @@ const routes = [
   {
     path: "/",
     component: Home,
-    meta: { isLoggedin: true },
+    meta: { isLoggedin: true, isRegistered: true },
   },
   {
     path: "/login",
@@ -33,49 +33,49 @@ const routes = [
   {
     path: "/account",
     component: NewEmployee,
-    meta: { isLoggedin: false },
+    meta: { isLoggedin: false},
   },
   {
     path: "/newStore",
     component: NewStore,
-    meta: { isLoggedin: true },
+    meta: { isLoggedin: true, isRegistered: true },
   },
   {
     path: "/roster",
     component: ViewRoster,
-    meta: { isLoggedin: true },
+    meta: { isLoggedin: true, isRegistered: true },
   },
 
   {
     path: "/available",
     component: Availability,
-    meta: { isLoggedin: true },
+    meta: { isLoggedin: true, isRegistered: true },
   },
   {
     path: "/editAvailability",
     component: editAvailability,
-    meta: { isLoggedin: true },
+    meta: { isLoggedin: true, isRegistered: true },
   },
   {
     path: "/request",
     component: RequestView,
-    meta: { isLoggedin: true },
+    meta: { isLoggedin: true, isRegistered: true },
   },
 
   {
     path: "/approve",
     component: RequestApproval,
-    meta: { isLoggedin: true, isManager: true },
+    meta: { isLoggedin: true, isManager: true, isRegistered: true },
   },
   {
     path: "/list",
     component: ListEmployee,
-    meta: { isLoggedin: true, isManager: true },
+    meta: { isLoggedin: true, isManager: true, isRegistered: true },
   },
   {
     path: "/create",
     component: CreateRoster,
-    meta: { isLoggedin: true, isManager: true },
+    meta: { isLoggedin: true, isManager: true, isRegistered: true },
   },
 ];
 
@@ -92,7 +92,11 @@ router.beforeEach((to, from, next) => {
       });
     } else if (to.meta.isManager && !store.state.isManager) {
       alert("Unauthorized Access");
-    } else {
+    } else if(to.meta.isRegistered && !store.state.isRegistered){
+      alert("Please complete the user registration.")
+      next('/account');
+    } 
+    else {
       next();
     }
   } else {

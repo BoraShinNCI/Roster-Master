@@ -13,19 +13,15 @@
                 <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
                 <form>
                   <div class="row">
-                    <div class="mb-4">
-                      <div class="form-outline">
-                        <input
-                          disabled
-                          type="email"
-                          class="form-control form-control-lg"
-                          :value=this.$store.state.user.email
-                        />
-                        <label class="form-label" for="email">Email</label>
-                      </div>
-                    </div>
+
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
+                        <small
+                          v-if="this.firstName == ''"
+                          id="firstName"
+                          class="form-text text-danger"
+                          >Please fill in</small
+                        >
                         <input
                           type="text"
                           v-model="firstName"
@@ -38,6 +34,12 @@
                     </div>
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
+                        <small
+                          v-if="this.lastName == ''"
+                          id="firstName"
+                          class="form-text text-danger"
+                          >Please fill in</small
+                        >
                         <input
                           type="text"
                           v-model="lastName"
@@ -53,12 +55,19 @@
                   <div class="row">
                     <div class="mb-4">
                       <div class="form-outline">
+                        <small
+                          v-if="this.address == ''"
+                          id="firstName"
+                          class="form-text text-danger"
+                          >Please fill in</small
+                        >
                         <input
                           type="text"
                           class="form-control form-control-lg"
                           v-model="address"
                         />
-                        <label class="form-label" for="address">Address</label>
+                        <label class="form-label" for="address">Address</label
+                        >
                       </div>
                     </div>
                   </div>
@@ -66,6 +75,12 @@
                   <div class="row">
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
+                        <small
+                          v-if="this.phone == ''"
+                          id="firstName"
+                          class="form-text text-danger"
+                          >Please fill in</small
+                        >
                         <input
                           type="tel"
                           v-model="phone"
@@ -78,6 +93,12 @@
                     </div>
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
+                        <small
+                          v-if="this.firstName == ''"
+                          id="employeeID"
+                          class="form-text text-danger"
+                          >Please fill in</small
+                        >
                         <input
                           type="text"
                           v-model="employeeID"
@@ -92,8 +113,11 @@
 
                   <div class="row">
                     <div class="col-12">
-                      <label class="form-label select-label mx-2" for="type"
-                        >Please select
+                      <label
+                        v-if="this.type == ''"
+                        class="form-label select-label mx-2 text-danger"
+                        for="type"
+                        >*Please select employee type
                       </label>
                     </div>
                     <div class="col-12">
@@ -108,12 +132,9 @@
                   </div>
 
                   <div class="mt-4 pt-2">
-                    <input
-                      class="btn btn-dark"
-                      type="submit"
-                      value="Submit"
-                      @click="submit"
-                    />
+                    <button class="btn btn-dark" type="submit" @click="submit">
+                      Submit
+                    </button>
                   </div>
                 </form>
               </div>
@@ -131,30 +152,29 @@ export default {
   name: "new-employee",
   data() {
     return {
-      employeeData: {
-        employeeID: ref(""),
-        firstName: ref(""),
-        lastName: ref(""),
-        address: ref(""),
-        phone: ref(""),
-        type: ref(""),
-      }
+
+      employeeID: ref(""),
+      firstName: ref(""),
+      lastName: ref(""),
+      address: ref(""),
+      phone: ref(""),
+      type: ref(""),
     };
   },
   methods: {
     submit() {
       this.$store.dispatch("userRegistration", {
+        employeeID: this.employeeID,
         firstName: this.firstName,
         lastName: this.lastName,
         address: this.address,
         phone: this.phone,
-        employeeID: this.employeeID,
         type: this.type,
       });
+
+      this.$store.dispatch("isRegistered", true)
     },
   },
-
-
 };
 </script>
 
