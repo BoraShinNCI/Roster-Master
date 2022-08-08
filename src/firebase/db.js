@@ -11,6 +11,7 @@ const firebaseConfig = {
   messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.VUE_APP_FIREBASE_APP_ID
   };
+
   
 // Use this to initialize the firebase App
 const firebaseApp = initializeApp(firebaseConfig);

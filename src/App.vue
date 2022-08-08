@@ -6,9 +6,18 @@
       </router-link>
 
       <div class="d-flex justify-content-end">
-        <p class="m-auto me-4 text-white" @click="selectStoreWindow = true">
-          <span v-if="$store.state.isStoreSelected == false">select store</span>
-          <span v-if="$store.state.isStoreSelected == true"
+        <p class="m-auto me-4 text-white" >
+          <span v-if="$store.state.isRegistered == true" >
+            <img
+              src="../public/user.png"
+              alt=""
+              height="20"
+              
+            />
+            Hi, {{ $store.state.user.firstName }}!
+          </span>
+          <span v-if="$store.state.isStoreSelected == false && $store.state.isRegistered == true" @click="selectStoreWindow = true">Select Store</span>
+          <span v-if="$store.state.isStoreSelected == true && $store.state.isRegistered == true" @click="selectStoreWindow = true"
             >{{ $store.state.selectedStore.name }} ({{
               $store.state.selectedStore.address
             }})</span
@@ -127,8 +136,16 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a v-if="$store.state.isLoggedin == true" class="nav-link" @click="$store.dispatch('logout')">Sign Out</a>
-            <router-link to="/login" v-if="$store.state.isLoggedin == false" class="nav-link"
+            <a
+              v-if="$store.state.isLoggedin == true"
+              class="nav-link"
+              @click="$store.dispatch('logout')"
+              >Sign Out</a
+            >
+            <router-link
+              to="/login"
+              v-if="$store.state.isLoggedin == false"
+              class="nav-link"
               >Log In</router-link
             >
           </li>
