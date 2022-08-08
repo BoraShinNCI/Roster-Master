@@ -6,7 +6,7 @@
           You are not registered in any store. <br />Please create a store or
           ask your manager to add you to the store.
         </p>
-        <router-link class="btn btn-dark" to="/newStore">
+        <router-link class="btn btn-dark" to="/newStore" @click="$emit('closeModal')">
           Create Store</router-link
         ><button class="btn btn-secondary mx-2" @click="$emit('closeModal')">Close</button>
       </div>

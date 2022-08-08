@@ -19,6 +19,7 @@ import {
 import { createStore } from "vuex";
 import router from "./router";
 import { db } from "./firebase/db";
+import { BIconArrowCounterclockwise } from "bootstrap-vue";
 
 const auth = getAuth();
 
@@ -28,6 +29,7 @@ const store = createStore({
       user: "",
       selectedStore: "",
       storeInfo: [],
+      isRegistered: false,
       isLoggedin: false,
       isManager: false,
       isStoreSelected: false,
@@ -45,14 +47,16 @@ const store = createStore({
           email: user.email,
           availability: user.availability,
         };
-
       }
     },
 
     // setting login status
     setLogin(state, loggedin) {
       state.isLoggedin = loggedin;
+    },
 
+    isRegistered(state, registered) {
+      state.isRegistered = registered;
     },
 
     // setting user type
@@ -139,7 +143,10 @@ const store = createStore({
           //setting app user to currently signed up user
           context.commit("setUser", auth.currentUser);
 
-          alert(auth.currentUser.email + " Successfully registered!!!");
+          alert(
+            auth.currentUser.email +
+              " Successfully signed up. Please complete user registration."
+          );
 
           //direct to employee contact registration page
           router.push("/account");
@@ -163,6 +170,7 @@ const store = createStore({
         .then((response) => {
           //setting app user to currently logged in user
           context.commit("setUser", auth.currentUser);
+
           alert("Welcome!");
         })
         .catch((error) => {
@@ -178,8 +186,11 @@ const store = createStore({
     },
 
     // user log out
-    logout() {
+    logout(context) {
       console.log("signing out the user ...");
+      context.commit("isStoreSelected", false);
+      context.commit("isRegistered", false);
+      context.commit("isLoggedin", false);
       auth.signOut();
     },
 
@@ -200,6 +211,7 @@ const store = createStore({
         });
         console.log("employee added");
         alert("User account successfully registered");
+        store.commit("isRegistered", true);
         //direct to home page
         router.push("/");
       } catch (e) {
@@ -389,38 +401,45 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
       // login status setting
       store.commit("setLogin", true);
-      console.log("auth state changed: User signed in");
 
-      //reading the user type
-      const docRef = doc(db, "employees", auth.currentUser.email);
-      getDoc(docRef).then((doc) => {
-        const user = {
-          employeeID: doc.data().employeeID,
-          firstName: doc.data().firstName,
-          lastName: doc.data().lastName,
-          email: doc.data().email,
-          phone: doc.data().phone,
-          type: doc.data().type,
-          availability: doc.data().availability,
-        };
+      getDoc(doc(db, "employees", auth.currentUser.email)).then((doc) => {
+        if (typeof doc.data() === "undefined") {
+          console.log("user is not registered");
+          alert("Please complete user registration.")
+           //direct to home page
+           router.push("/account");
+        } else {
+          console.log("user is registered");
+          store.commit("isRegistered", true)
+          //reading the user type
+          const user = {
+            employeeID: doc.data().employeeID,
+            firstName: doc.data().firstName,
+            lastName: doc.data().lastName,
+            email: doc.data().email,
+            phone: doc.data().phone,
+            type: doc.data().type,
+            availability: doc.data().availability,
+          };
 
-        // user info setting
-        store.commit("setUser", user);
+          // user info setting
+          store.commit("setUser", user);
 
-        if (doc.data().storeID.length != 0) {
-          // reading all the store IDs that the user is registered to
-          store.commit("setStoreInfo", doc.data().storeID);
-        }
+          if (doc.data().storeID.length != 0) {
+            // reading all the store IDs that the user is registered to
+            store.commit("setStoreInfo", doc.data().storeID);
+          }
 
-        // if the user is a manager
-        if (doc.data().type == "manager") {
-          // setting user type: manager
-          store.commit("isManager", true);
+          // if the user is a manager
+          if (doc.data().type == "manager") {
+            // setting user type: manager
+            store.commit("isManager", true);
+          }
+
+          //direct to home page
+          router.push("/");
         }
       });
-
-      //direct to home page
-      router.push("/");
     } else {
       console.log("auth state changed: No user is signed in");
       store.commit("setLogin", false);

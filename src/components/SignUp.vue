@@ -10,8 +10,8 @@
         v-model="email"
         placeholder="Enter email"
       />
-      <small id="emailHelp" class="form-text text-muted"
-        >We'll never share your email with anyone else.</small
+         <small v-if="password.length < 6 && password.length>0" id="emailHelp" class="form-text text-danger"
+        >Password length is too short</small
       >
     </div>
     <div class="form-group col-9 mx-auto">
