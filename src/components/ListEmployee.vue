@@ -60,7 +60,7 @@
           />
         </div>
         <div class="form-group m-auto w-75">
-          {{ employeeName }}
+          {{ employeeName }} ({{employeeType}})
         </div>
         <div class="modal-footer">
           <button
@@ -100,6 +100,7 @@ export default {
       addEmployeeWindow: false,
       employeeEmail: ref(""),
       employeeName: "",
+      employeeType: "",
     };
   },
   components: {},
@@ -125,6 +126,7 @@ export default {
       console.log(this.employeeEmail);
       getDoc(doc(db, "employees", this.employeeEmail)).then((doc) => {
         this.employeeName = doc.data().lastName + ", " + doc.data().firstName;
+        this.employeeType = doc.data().type;
       });
     },
   },
