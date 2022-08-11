@@ -3,7 +3,7 @@
     <h3 class="mt-5">Hello, {{ $store.state.user.firstName }}!</h3>
     <div
       v-if="
-        $store.state.isStoreSelected == false
+        $store.state.isStoreSelected == false && $store.state.storeInfo.length != 0
       "
     >
       <p>Please select your store</p>
