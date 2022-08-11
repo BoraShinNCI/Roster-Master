@@ -175,7 +175,7 @@ export default {
       user: computed(() => this.$store.state.user),
       isLoggedin: computed(() => this.$store.state.isLoggedin),
       selectedStore: computed(() => this.$store.state.selectedStore),
-      storeInfo: this.$store.state.storeInfo,
+      storeInfo: computed(()=>this.$store.state.storeInfo),
       selectStoreWindow: false,
     };
   },

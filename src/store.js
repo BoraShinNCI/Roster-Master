@@ -270,7 +270,7 @@ const store = createStore({
       alert("new store successfully added");
 
       //direct to employee adding page
-      router.push("/list");
+      router.push("/home");
     },
 
     // adding employee to the employee pool in the store database
