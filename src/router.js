@@ -18,7 +18,7 @@ const routes = [
   {
     path: "/",
     component: Home,
-    meta: { isLoggedin: true, isRegistered: true },
+    meta: { isLoggedin: true, isRegistered: true, isHome: true },
   },
   {
     path: "/login",
@@ -95,7 +95,7 @@ router.beforeEach((to, from, next) => {
     } else if(to.meta.isRegistered && !store.state.isRegistered){
       alert("Please complete the user registration.")
       next('/account');
-    } 
+    }  
     else {
       next();
     }
